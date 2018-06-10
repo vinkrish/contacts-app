@@ -1,30 +1,52 @@
 package com.hellogroup.connectapp.contacts;
 
+import android.app.Activity;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.hellogroup.connectapp.R;
+import com.hellogroup.connectapp.data.Contact;
+import com.hellogroup.connectapp.data.ContactsQuery;
+import com.hellogroup.connectapp.util.library.PinnedHeaderListView;
 
-import dagger.android.AndroidInjection;
-import dagger.android.DaggerApplication;
+import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 
-public class ContactsActivity extends DaggerAppCompatActivity {
+public class ContactsActivity extends DaggerAppCompatActivity implements ContactsContract.View {
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(android.R.id.list) PinnedHeaderListView mListView;
+
+    private ContactsAdapter mAdapter;
+    private LayoutInflater mInflater;
+
+    @Inject
+    ContactsPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contacts);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        setupListView();
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -34,25 +56,47 @@ public class ContactsActivity extends DaggerAppCompatActivity {
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_contacts, menu);
-        return true;
+    private void setupListView() {
+        mInflater = LayoutInflater.from(ContactsActivity.this);
+        mAdapter = new ContactsAdapter(this, new ArrayList<Contact>(0));
+
+        int pinnedHeaderBackgroundColor = getResources().getColor(getResIdFromAttribute(this, android.R.attr.colorBackground));
+        mAdapter.setPinnedHeaderBackgroundColor(pinnedHeaderBackgroundColor);
+        mAdapter.setPinnedHeaderTextColor(getResources().getColor(R.color.pinned_header_text));
+        mListView.setPinnedHeaderView(mInflater.inflate(R.layout.pinned_header_listview_side_header, mListView, false));
+        mListView.setAdapter(mAdapter);
+        mListView.setOnScrollListener(mAdapter);
+        mListView.setEnableHeaderTransparencyChanges(false);
+    }
+
+    public static int getResIdFromAttribute(final Activity activity, final int attr) {
+        if (attr == 0)
+            return 0;
+        final TypedValue typedValue = new TypedValue();
+        activity.getTheme().resolveAttribute(attr, typedValue, true);
+        return typedValue.resourceId;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void setLoadingIndicator(boolean active) {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void showContacts(ArrayList<Contact> contactList) {
+        mAdapter.setData(contactList);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.takeView(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.dropView();
+    }
+
 }

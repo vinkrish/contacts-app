@@ -3,9 +3,9 @@ package com.hellogroup.connectapp.addeditcontact;
 import com.hellogroup.connectapp.di.ActivityScoped;
 
 @ActivityScoped
-public class AddEditContactPresenter implements AddEditContact.Presenter {
+public class AddEditContactPresenter implements AddEditContactContract.Presenter {
     @Override
-    public void takeView(AddEditContact.View view) {
+    public void takeView(AddEditContactContract.View view) {
 
     }
 

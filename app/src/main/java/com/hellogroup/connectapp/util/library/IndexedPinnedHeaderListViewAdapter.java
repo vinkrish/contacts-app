@@ -1,4 +1,4 @@
-package com.hellogroup.connectapp.util.library.library;
+package com.hellogroup.connectapp.util.library;
 
 import android.graphics.Color;
 import android.os.Build.VERSION;

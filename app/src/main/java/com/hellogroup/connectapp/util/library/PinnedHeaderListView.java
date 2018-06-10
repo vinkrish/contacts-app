@@ -1,4 +1,4 @@
-package com.hellogroup.connectapp.util.library.library;
+package com.hellogroup.connectapp.util.library;
 
 import android.content.Context;
 import android.graphics.Canvas;

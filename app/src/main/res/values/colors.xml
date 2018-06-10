@@ -3,4 +3,10 @@
     <color name="colorPrimary">#8BC34A</color>
     <color name="colorPrimaryDark">#6B8E23</color>
     <color name="colorAccent">#8BC34A</color>
+
+    <color name="listview_pressed">#FFdddddd</color>
+    <color name="listview_focused">#6B8E23</color>
+    <color name="listview_checked">#FFededed</color>
+
+    <color name="pinned_header_text">#FF3c3c3c</color>
 </resources>

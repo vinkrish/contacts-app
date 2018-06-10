@@ -10,5 +10,5 @@ public abstract class AddEditContactModule {
 
     @ActivityScoped
     @Binds
-    abstract AddEditContact.Presenter ContactPresenter(AddEditContactPresenter presenter);
+    abstract AddEditContactContract.Presenter ContactPresenter(AddEditContactPresenter presenter);
 }

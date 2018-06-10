@@ -1,4 +1,4 @@
-package com.hellogroup.connectapp.util.library.library;
+package com.hellogroup.connectapp.util.library;
 
 import android.view.View;
 import android.view.ViewGroup;

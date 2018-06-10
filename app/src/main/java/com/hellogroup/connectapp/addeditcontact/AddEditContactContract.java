@@ -3,7 +3,7 @@ package com.hellogroup.connectapp.addeditcontact;
 import com.hellogroup.connectapp.BasePresenter;
 import com.hellogroup.connectapp.BaseView;
 
-public interface AddEditContact {
+public interface AddEditContactContract {
 
     interface View extends BaseView<Presenter> {
 
@@ -12,7 +12,7 @@ public interface AddEditContact {
 
     interface Presenter extends BasePresenter<View> {
 
-        void takeView(AddEditContact.View view);
+        void takeView(AddEditContactContract.View view);
 
         void dropView();
     }
