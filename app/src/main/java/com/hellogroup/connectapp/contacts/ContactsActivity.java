@@ -1,6 +1,7 @@
 package com.hellogroup.connectapp.contacts;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,12 +9,14 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.hellogroup.connectapp.R;
+import com.hellogroup.connectapp.contactdetail.ContactDetailActivity;
 import com.hellogroup.connectapp.data.Contact;
 import com.hellogroup.connectapp.data.ContactsQuery;
 import com.hellogroup.connectapp.util.library.PinnedHeaderListView;
@@ -60,7 +63,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
 
     private void setupListView() {
         mInflater = LayoutInflater.from(ContactsActivity.this);
-        mAdapter = new ContactsAdapter(this, new ArrayList<Contact>(0));
+        mAdapter = new ContactsAdapter(this, new ArrayList<Contact>(0), mItemListener);
 
         int pinnedHeaderBackgroundColor = getResources().getColor(getResIdFromAttribute(this, android.R.attr.colorBackground));
         mAdapter.setPinnedHeaderBackgroundColor(pinnedHeaderBackgroundColor);
@@ -95,6 +98,26 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
         Snackbar.make(coordinatorLayout, "Show no contacts...", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
     }
+
+    @Override
+    public void showContactDetailsUi(long contactId) {
+        Intent intent = new Intent(getApplicationContext(), ContactDetailActivity.class);
+        intent.putExtra(ContactDetailActivity.EXTRA_CONTACT_ID, contactId);
+        startActivity(intent);
+    }
+
+    public interface ContactItemListener {
+        void onContactClick(Contact clickedContact);
+    }
+
+    ContactItemListener mItemListener = new ContactItemListener() {
+        @Override
+        public void onContactClick(Contact clickedContact) {
+            Log.d("_id", clickedContact.contactId + " ");
+            Log.d("name", clickedContact.displayName);
+            mPresenter.openContactDetails(clickedContact);
+        }
+    };
 
     @Override
     public void onResume() {

@@ -52,6 +52,11 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     }
 
     @Override
+    public void openContactDetails(Contact requestedContact) {
+        mContactsView.showContactDetailsUi(requestedContact.contactId);
+    }
+
+    @Override
     public void dropView() {
         mContactsView = null;
     }

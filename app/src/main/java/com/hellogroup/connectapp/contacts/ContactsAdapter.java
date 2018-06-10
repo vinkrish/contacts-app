@@ -25,6 +25,7 @@ import java.util.Locale;
 public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Contact> {
     private ArrayList<Contact> mContacts;
     private LayoutInflater mInflater;
+    private ContactsActivity.ContactItemListener mItemListener;
     private final AsyncTaskThreadPool mAsyncTaskThreadPool = new AsyncTaskThreadPool(1, 2, 10);
 
     ColorGenerator generator = ColorGenerator.MATERIAL;
@@ -39,9 +40,10 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
         return ((StringArrayAlphabetIndexer.AlphaBetSection) getSections()[sectionIndex]).getName();
     }
 
-    public ContactsAdapter(Context context, final ArrayList<Contact> contacts) {
+    public ContactsAdapter(Context context, final ArrayList<Contact> contacts, ContactsActivity.ContactItemListener itemListener) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         setData(contacts);
+        mItemListener = itemListener;
     }
 
     public void setData(final ArrayList<Contact> contacts) {
@@ -89,6 +91,14 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
             holder.updateTask.cancel(true);
 
         bindSectionHeader(holder.headerView, null, position);
+
+        rootView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                mItemListener.onContactClick(contact);
+            }
+        });
+
         return rootView;
     }
 
