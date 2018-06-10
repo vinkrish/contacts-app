@@ -13,6 +13,8 @@ public interface ContactsContract {
         void setLoadingIndicator(boolean active);
 
         void showContacts(ArrayList<Contact> contactList);
+
+        void showNoContacts();
     }
 
     interface Presenter extends BasePresenter<View>{

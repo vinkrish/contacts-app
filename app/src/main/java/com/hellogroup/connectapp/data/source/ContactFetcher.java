@@ -1,4 +1,4 @@
-package com.hellogroup.connectapp.contacts;
+package com.hellogroup.connectapp.data.source;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -9,30 +9,30 @@ import android.support.v4.content.CursorLoader;
 import com.hellogroup.connectapp.data.Contact;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
 // new ContactFetcher(this).fetchAll();
-public class ContactFetcher {
+public class ContactFetcher{
 
-    private final Context context;
+    private final Context mContext;
 
     @Inject
-    ContactFetcher(Context c) {
-        this.context = c;
+    ContactFetcher(Context context) {
+        mContext = context;
     }
 
     private ArrayList<Contact> listContacts = new ArrayList<>();
 
-    public ArrayList<Contact> fetchAll() {
+    public ArrayList<Contact> getContacts() {
+
         String[] projectionFields = new String[]{
                 ContactsContract.Contacts._ID,
                 ContactsContract.Contacts.DISPLAY_NAME
         };
 
-        CursorLoader cursorLoader = new CursorLoader(context,
+        CursorLoader cursorLoader = new CursorLoader(mContext,
                 ContactsContract.Contacts.CONTENT_URI,
                 projectionFields, // the columns to retrieve
                 null, // the selection criteria (none)
@@ -42,8 +42,6 @@ public class ContactFetcher {
 
         Cursor c = cursorLoader.loadInBackground();
 
-        final Map<String, Contact> contactsMap = new HashMap<>(c.getCount());
-
         if (c.moveToFirst()) {
             int idIndex = c.getColumnIndex(ContactsContract.Contacts._ID);
             int nameIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
@@ -52,17 +50,13 @@ public class ContactFetcher {
                 long contactId = c.getLong(idIndex);
                 String contactDisplayName = c.getString(nameIndex);
                 Contact contact = new Contact(contactId, contactDisplayName);
-                //contactsMap.put(contactId, contact);
                 if(contact.displayName != null) {
                     listContacts.add(contact);
                 }
                 c.moveToNext();
             }
         }
-
         c.close();
-
-        //matchContactNumbers(contactsMap);
 
         return listContacts;
     }
@@ -75,7 +69,7 @@ public class ContactFetcher {
                 Phone.CONTACT_ID,
         };
 
-        Cursor phone = new CursorLoader(context,
+        Cursor phone = new CursorLoader(mContext,
                 Phone.CONTENT_URI,
                 numberProjection,
                 null,
@@ -96,7 +90,7 @@ public class ContactFetcher {
                 }
                 final int type = phone.getInt(contactTypeColumnIndex);
                 String customLabel = "Custom";
-                CharSequence phoneType = Phone.getTypeLabel(context.getResources(), type, customLabel);
+                CharSequence phoneType = Phone.getTypeLabel(mContext.getResources(), type, customLabel);
                 //contact.addNumber(number, phoneType.toString());
                 phone.moveToNext();
             }

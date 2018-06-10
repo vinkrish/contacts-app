@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.hellogroup.connectapp.R;
 import com.hellogroup.connectapp.data.Contact;
@@ -29,6 +30,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(android.R.id.list) PinnedHeaderListView mListView;
 
     private ContactsAdapter mAdapter;
@@ -79,12 +81,19 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
 
     @Override
     public void setLoadingIndicator(boolean active) {
-
+        if(active) progressBar.setVisibility(View.VISIBLE);
+        else progressBar.setVisibility(View.GONE);
     }
 
     @Override
     public void showContacts(ArrayList<Contact> contactList) {
-        mAdapter.setData(contactList);
+        mAdapter.replaceData(contactList);
+    }
+
+    @Override
+    public void showNoContacts() {
+        Snackbar.make(coordinatorLayout, "Show no contacts...", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 
     @Override

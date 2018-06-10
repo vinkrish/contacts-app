@@ -3,6 +3,7 @@ package com.hellogroup.connectapp.di;
 import android.app.Application;
 
 import com.hellogroup.connectapp.ContactApplication;
+import com.hellogroup.connectapp.data.source.ContactsRepository;
 
 import javax.inject.Singleton;
 
@@ -12,7 +13,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.support.AndroidSupportInjectionModule;
 
 @Singleton
-@Component(modules = {ApplicationModule.class,
+@Component(modules = { ContactsRepositoryModule.class,
+        ApplicationModule.class,
         ActivityBindingModule.class,
         AndroidSupportInjectionModule.class})
 public interface AppComponent extends AndroidInjector<ContactApplication> {
