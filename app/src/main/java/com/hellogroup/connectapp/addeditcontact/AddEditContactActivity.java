@@ -5,7 +5,10 @@ import android.os.Bundle;
 
 import com.hellogroup.connectapp.R;
 
-public class AddEditContactActivity extends AppCompatActivity {
+import dagger.android.AndroidInjection;
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class AddEditContactActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

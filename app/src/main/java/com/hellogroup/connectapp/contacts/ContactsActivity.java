@@ -11,7 +11,11 @@ import android.view.MenuItem;
 
 import com.hellogroup.connectapp.R;
 
-public class ContactsActivity extends AppCompatActivity {
+import dagger.android.AndroidInjection;
+import dagger.android.DaggerApplication;
+import dagger.android.support.DaggerAppCompatActivity;
+
+public class ContactsActivity extends DaggerAppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
