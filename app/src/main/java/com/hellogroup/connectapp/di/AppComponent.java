@@ -25,6 +25,4 @@ public interface AppComponent extends AndroidInjector<ContactApplication> {
 
         AppComponent build();
     }
-
-    //void inject(Application app);
 }
