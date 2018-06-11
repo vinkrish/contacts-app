@@ -1,6 +1,7 @@
 package com.hellogroup.connectapp.contacts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
@@ -59,7 +60,8 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
     }
 
     private void setupListView() {
-        mInflater = LayoutInflater.from(ContactsActivity.this);
+        //mInflater = LayoutInflater.from(ContactsActivity.this);
+        mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mAdapter = new ContactsAdapter(this, new ArrayList<Contact>(0), mItemListener);
 
         int pinnedHeaderBackgroundColor = getResources().getColor(getResIdFromAttribute(this, android.R.attr.colorBackground));
@@ -110,8 +112,6 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
     ContactItemListener mItemListener = new ContactItemListener() {
         @Override
         public void onContactClick(Contact clickedContact) {
-            Log.d("_id", clickedContact.contactId + " ");
-            Log.d("name", clickedContact.displayName);
             mPresenter.openContactDetails(clickedContact);
         }
     };
@@ -119,7 +119,9 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.takeView(this);
+        if(mAdapter.getCount() == 0) {
+            mPresenter.takeView(this);
+        }
     }
 
     @Override

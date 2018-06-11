@@ -39,7 +39,7 @@ public class ContactFetcher{
                 projectionFields, // the columns to retrieve
                 null, // the selection criteria (none)
                 null, // the selection args (none)
-                "display_name ASC" // the sort order (default)
+                "display_name COLLATE NOCASE ASC" // the sort order (default)
         );
 
         Cursor c = cursorLoader.loadInBackground();

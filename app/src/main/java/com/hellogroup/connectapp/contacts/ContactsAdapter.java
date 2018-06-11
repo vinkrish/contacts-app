@@ -46,7 +46,7 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
         mItemListener = itemListener;
     }
 
-    public void setData(final ArrayList<Contact> contacts) {
+    public void setData(ArrayList<Contact> contacts) {
         this.mContacts = contacts;
         final String[] generatedContactNames = generateContactNames(contacts);
         setSectionIndexer(new StringArrayAlphabetIndexer(generatedContactNames, true));
