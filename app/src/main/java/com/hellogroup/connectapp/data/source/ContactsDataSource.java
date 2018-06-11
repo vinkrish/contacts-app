@@ -15,6 +15,8 @@ public interface ContactsDataSource {
 
     interface LoadContactDetailsCallback {
         void onContactDetailsLoaded(Contact contact);
+
+        void onContactDetailsNotAvailable();
     }
 
     void getContacts(LoadContactsCallback callback);

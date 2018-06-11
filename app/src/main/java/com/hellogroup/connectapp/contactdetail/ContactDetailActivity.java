@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.common.base.Strings;
 import com.hellogroup.connectapp.R;
+import com.hellogroup.connectapp.addeditcontact.AddEditContactActivity;
 import com.hellogroup.connectapp.data.Contact;
 
 import javax.inject.Inject;
@@ -44,6 +47,9 @@ public class ContactDetailActivity extends DaggerAppCompatActivity implements Co
     @Inject
     ContactDetailPresenter mPresenter;
 
+    @Inject
+    long mContactId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +59,29 @@ public class ContactDetailActivity extends DaggerAppCompatActivity implements Co
         setSupportActionBar(toolbar);
 
         setupClickListeners();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_contact_details, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_star_contact:
+                return true;
+            case R.id.action_edit_contact:
+                Intent intent = new Intent(getApplicationContext(), AddEditContactActivity.class);
+                intent.putExtra(AddEditContactActivity.ARGUMENT_EDIT_CONTACT_ID, mContactId);
+                startActivity(intent);
+                return true;
+            case R.id.action_share_contact:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private void setupClickListeners() {

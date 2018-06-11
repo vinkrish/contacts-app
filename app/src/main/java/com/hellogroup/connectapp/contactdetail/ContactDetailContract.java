@@ -40,7 +40,5 @@ public interface ContactDetailContract {
         void triggerContactNumberCopy();
 
         void triggerContactEmailCopy();
-
-        void dropView();
     }
 }

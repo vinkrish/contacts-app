@@ -22,9 +22,9 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
     @BindView(R.id.name) TextInputLayout nameInputLayout;
     @BindView(R.id.phone) TextInputLayout phoneInputLayout;
     @BindView(R.id.email) TextInputLayout emailInputlayout;
-    @BindView(R.id.name_et) EditText nameEditText;
-    @BindView(R.id.phone_et) EditText phoneEditText;
-    @BindView(R.id.email_et) EditText emailEditText;
+    @BindView(R.id.name_et) EditText mName;
+    @BindView(R.id.phone_et) EditText mPhone;
+    @BindView(R.id.email_et) EditText mEmail;
 
     public static final int REQUEST_ADD_CONTACT = 1;
     public static final String ARGUMENT_EDIT_CONTACT_ID = "EDIT_CONTACT_ID";
@@ -53,7 +53,6 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_add_contact:
                 //save contact
@@ -66,6 +65,21 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
     @Override
     public void setLoadingIndicator(boolean active) {
 
+    }
+
+    @Override
+    public void setName(String name) {
+        mName.setText(name);
+    }
+
+    @Override
+    public void setPhone(String phone) {
+        mPhone.setText(phone);
+    }
+
+    @Override
+    public void setEmail(String email) {
+        mEmail.setText(email);
     }
 
     @Override

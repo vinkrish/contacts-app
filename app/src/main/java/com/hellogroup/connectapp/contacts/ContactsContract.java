@@ -30,7 +30,5 @@ public interface ContactsContract {
         void openContactDetails(Contact requestedContact);
 
         void addNewContact();
-
-        void dropView();
     }
 }

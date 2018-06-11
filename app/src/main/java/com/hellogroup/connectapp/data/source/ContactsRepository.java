@@ -40,6 +40,11 @@ public class ContactsRepository implements ContactsDataSource{
             public void onContactDetailsLoaded(Contact contact) {
                 callback.onContactDetailsLoaded(contact);
             }
+
+            @Override
+            public void onContactDetailsNotAvailable() {
+                // Indicate missing contact details
+            }
         });
     }
 }

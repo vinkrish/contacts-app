@@ -46,6 +46,11 @@ public class ContactDetailPresenter implements ContactDetailContract.Presenter {
                     mContactDetailView.showContact(contact);
                 }
             }
+
+            @Override
+            public void onContactDetailsNotAvailable() {
+
+            }
         });
     }
 
