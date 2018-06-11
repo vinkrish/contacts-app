@@ -3,10 +3,12 @@ package com.hellogroup.connectapp.contacts;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -17,6 +19,7 @@ import com.hellogroup.connectapp.R;
 import com.hellogroup.connectapp.addeditcontact.AddEditContactActivity;
 import com.hellogroup.connectapp.contactdetail.ContactDetailActivity;
 import com.hellogroup.connectapp.data.Contact;
+import com.hellogroup.connectapp.util.PermissionUtil;
 import com.hellogroup.connectapp.util.library.PinnedHeaderListView;
 
 import java.util.ArrayList;
@@ -27,7 +30,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 
-public class ContactsActivity extends DaggerAppCompatActivity implements ContactsContract.View {
+public class ContactsActivity extends DaggerAppCompatActivity implements
+        ContactsContract.View, ActivityCompat.OnRequestPermissionsResultCallback {
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.fab) FloatingActionButton fab;
@@ -36,6 +40,8 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
 
     private ContactsAdapter mAdapter;
     private LayoutInflater mInflater;
+
+    private static final int READ_CONTACTS_PERMISSION = 999;
 
     @Inject
     ContactsPresenter mPresenter;
@@ -56,6 +62,19 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
                 mPresenter.addNewContact();
             }
         });
+
+        PermissionUtil.isContactsReadingPermissionGranted(this, READ_CONTACTS_PERMISSION);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            mPresenter.takeView(this);
+        } else {
+            Snackbar.make(coordinatorLayout, "Reading Contacts Permission has been denied!", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+        }
     }
 
     private void setupListView() {
@@ -124,7 +143,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
     @Override
     public void onResume() {
         super.onResume();
-        if(mAdapter.getCount() == 0) {
+        if(mAdapter.getCount() == 0 && PermissionUtil.getContactsReadingPermissionStatus(this)) {
             mPresenter.takeView(this);
         }
     }
