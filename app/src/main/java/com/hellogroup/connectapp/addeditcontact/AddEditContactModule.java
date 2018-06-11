@@ -13,9 +13,8 @@ public abstract class AddEditContactModule {
 
     @Provides
     @ActivityScoped
-    @Nullable
-    static String provideContactId(AddEditContactActivity activity) {
-        return activity.getIntent().getStringExtra(AddEditContactActivity.ARGUMENT_EDIT_CONTACT_ID);
+    static long provideContactId(AddEditContactActivity activity) {
+        return activity.getIntent().getLongExtra(AddEditContactActivity.ARGUMENT_EDIT_CONTACT_ID, 0);
     }
 
     @ActivityScoped

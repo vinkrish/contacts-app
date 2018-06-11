@@ -12,6 +12,8 @@ public interface ContactDetailContract {
 
         void showContact(Contact contact);
 
+        void showMissingContact();
+
         void showCaller();
 
         void showMessenger();
@@ -27,7 +29,7 @@ public interface ContactDetailContract {
 
         void takeView(ContactDetailContract.View view);
 
-        void loadContactDetails(long contactId);
+        void loadContactDetails();
 
         void openCaller();
 

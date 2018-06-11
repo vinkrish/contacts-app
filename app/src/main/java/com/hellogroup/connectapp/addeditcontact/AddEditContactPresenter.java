@@ -12,8 +12,11 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private AddEditContactContract.View mAddEditContactView;
 
+    private long mContactId;
+
     @Inject
-    AddEditContactPresenter(ContactsRepository contactsRepository){
+    AddEditContactPresenter(long contactId, ContactsRepository contactsRepository){
+        mContactId = contactId;
         mContactsRepository = contactsRepository;
     }
 

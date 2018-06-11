@@ -19,7 +19,7 @@ public class PermissionUtil {
     }
 
     public static boolean getContactsReadingPermissionStatus(Activity activity) {
-        return ContextCompat.checkSelfPermission(activity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        return ContextCompat.checkSelfPermission(activity, android.Manifest.permission.READ_CONTACTS)
                 == PackageManager.PERMISSION_GRANTED;
     }
 

@@ -30,7 +30,10 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
     public static final String ARGUMENT_EDIT_CONTACT_ID = "EDIT_CONTACT_ID";
 
     @Inject
-    AddEditContactPresenter mPresenter;
+    AddEditContactContract.Presenter mPresenter;
+
+    @Inject
+    long contactId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
