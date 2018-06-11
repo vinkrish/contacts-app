@@ -29,7 +29,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".addeditcontact.AddEditContactActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="@string/add_new_contact">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".contacts.ContactsActivity" />
+        </activity>
     </application>
 
 </manifest>
