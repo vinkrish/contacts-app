@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.hellogroup.connectapp.R;
+import com.hellogroup.connectapp.addeditcontact.AddEditContactActivity;
 import com.hellogroup.connectapp.contactdetail.ContactDetailActivity;
 import com.hellogroup.connectapp.data.Contact;
 import com.hellogroup.connectapp.util.library.PinnedHeaderListView;
@@ -53,8 +54,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                mPresenter.addNewContact();
             }
         });
     }
@@ -103,6 +103,12 @@ public class ContactsActivity extends DaggerAppCompatActivity implements Contact
         Intent intent = new Intent(getApplicationContext(), ContactDetailActivity.class);
         intent.putExtra(ContactDetailActivity.EXTRA_CONTACT_ID, contactId);
         startActivity(intent);
+    }
+
+    @Override
+    public void showAddContact() {
+        Intent intent = new Intent(getApplicationContext(), AddEditContactActivity.class);
+        startActivityForResult(intent, AddEditContactActivity.REQUEST_ADD_CONTACT);
     }
 
     public interface ContactItemListener {

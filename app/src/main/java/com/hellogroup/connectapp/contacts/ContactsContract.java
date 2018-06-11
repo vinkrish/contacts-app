@@ -17,6 +17,8 @@ public interface ContactsContract {
         void showNoContacts();
 
         void showContactDetailsUi(long contactId);
+
+        void showAddContact();
     }
 
     interface Presenter extends BasePresenter<View>{
@@ -26,6 +28,8 @@ public interface ContactsContract {
         void loadContacts();
 
         void openContactDetails(Contact requestedContact);
+
+        void addNewContact();
 
         void dropView();
     }

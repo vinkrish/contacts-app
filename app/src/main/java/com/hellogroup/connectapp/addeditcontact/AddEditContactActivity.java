@@ -9,6 +9,8 @@ import dagger.android.support.DaggerAppCompatActivity;
 
 public class AddEditContactActivity extends DaggerAppCompatActivity implements AddEditContactContract.View{
 
+    public static final int REQUEST_ADD_CONTACT = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -27,7 +27,9 @@
         <activity
             android:name=".contactdetail.ContactDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".addeditcontact.AddEditContactActivity" />
+        <activity
+            android:name=".addeditcontact.AddEditContactActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

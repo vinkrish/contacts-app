@@ -59,6 +59,13 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     }
 
     @Override
+    public void addNewContact() {
+        if(mContactsView != null) {
+            mContactsView.showAddContact();
+        }
+    }
+
+    @Override
     public void dropView() {
         mContactsView = null;
     }
