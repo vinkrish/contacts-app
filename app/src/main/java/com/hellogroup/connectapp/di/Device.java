@@ -1,4 +1,4 @@
-package com.hellogroup.connectapp.data;
+package com.hellogroup.connectapp.di;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

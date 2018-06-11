@@ -13,6 +13,12 @@ public interface ContactsDataSource {
         void onContactsNotAvailable();
     }
 
+    interface LoadContactDetailsCallback {
+        void onContactDetailsLoaded(Contact contact);
+    }
+
     void getContacts(LoadContactsCallback callback);
+
+    void getContactDetails(long contactId, LoadContactDetailsCallback callback);
 
 }

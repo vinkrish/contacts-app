@@ -2,8 +2,6 @@ package com.hellogroup.connectapp.contacts;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,7 +16,6 @@ import android.widget.ProgressBar;
 import com.hellogroup.connectapp.R;
 import com.hellogroup.connectapp.contactdetail.ContactDetailActivity;
 import com.hellogroup.connectapp.data.Contact;
-import com.hellogroup.connectapp.data.ContactsQuery;
 import com.hellogroup.connectapp.util.library.PinnedHeaderListView;
 
 import java.util.ArrayList;

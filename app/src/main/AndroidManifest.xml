@@ -3,6 +3,7 @@
     package="com.hellogroup.connectapp">
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <application
         android:name=".ContactApplication"

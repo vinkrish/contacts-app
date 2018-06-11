@@ -3,13 +3,13 @@ package com.hellogroup.connectapp.data.source;
 import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract;
+import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.content.CursorLoader;
 
 import com.hellogroup.connectapp.data.Contact;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -24,6 +24,8 @@ public class ContactFetcher{
     }
 
     private ArrayList<Contact> listContacts = new ArrayList<>();
+
+    private Contact contact = new Contact();
 
     public ArrayList<Contact> getContacts() {
 
@@ -42,7 +44,7 @@ public class ContactFetcher{
 
         Cursor c = cursorLoader.loadInBackground();
 
-        if (c.moveToFirst()) {
+        if (c!=null && c.moveToFirst()) {
             int idIndex = c.getColumnIndex(ContactsContract.Contacts._ID);
             int nameIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
 
@@ -61,42 +63,162 @@ public class ContactFetcher{
         return listContacts;
     }
 
-    public void matchContactNumbers(Map<String, Contact> contactsMap) {
-        // Get numbers
+    public Contact getContactDetails(long contactId) {
+        contact.contactId = contactId;
+        appendName(contactId);
+        appendNumber(contactId);
+        appendEmail(contactId);
+        return contact;
+    }
+
+    public void appendName(long contactId) {
+        String[] projectionFields = new String[]{
+                ContactsContract.Contacts._ID,
+                ContactsContract.Contacts.DISPLAY_NAME
+        };
+
+        String selection = ContactsContract.Contacts._ID + " = ?";
+
+        String[] selectionArgs = { Long.toString(contactId) };
+
+        CursorLoader cursorLoader = new CursorLoader(mContext,
+                ContactsContract.Contacts.CONTENT_URI,
+                projectionFields, // the columns to retrieve
+                selection, // the selection criteria (none)
+                selectionArgs, // the selection args (none)
+                null // the sort order (default)
+        );
+
+        Cursor c = cursorLoader.loadInBackground();
+
+        if (c.getCount()> 0 && c.moveToFirst()) {
+            int nameIndex = c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+
+            while (!c.isAfterLast()) {
+                String contactDisplayName = c.getString(nameIndex);
+                if(contactDisplayName != null) {
+                    contact.setDisplayName(contactDisplayName);
+                }
+                c.moveToNext();
+            }
+        }
+        c.close();
+    }
+
+    public void appendNumber(long contactId) {
         final String[] numberProjection = new String[]{
                 Phone.NUMBER,
                 Phone.TYPE,
                 Phone.CONTACT_ID,
         };
 
-        Cursor phone = new CursorLoader(mContext,
+        String selection = Phone.CONTACT_ID + " = ?";
+
+        String[] selectionArgs = { Long.toString(contactId) };
+
+        Cursor c = new CursorLoader(mContext,
                 Phone.CONTENT_URI,
                 numberProjection,
-                null,
-                null,
+                selection,
+                selectionArgs,
                 null).loadInBackground();
 
-        if (phone.moveToFirst()) {
-            final int contactNumberColumnIndex = phone.getColumnIndex(Phone.NUMBER);
-            final int contactTypeColumnIndex = phone.getColumnIndex(Phone.TYPE);
-            final int contactIdColumnIndex = phone.getColumnIndex(Phone.CONTACT_ID);
+        if (c.getCount()>0 && c.moveToFirst()) {
+            int contactNumberColumnIndex = c.getColumnIndex(Phone.NUMBER);
+            int contactTypeColumnIndex = c.getColumnIndex(Phone.TYPE);
 
-            while (!phone.isAfterLast()) {
-                final String number = phone.getString(contactNumberColumnIndex);
-                final String contactId = phone.getString(contactIdColumnIndex);
-                Contact contact = contactsMap.get(contactId);
-                if (contact == null) {
-                    continue;
+            while (!c.isAfterLast()) {
+                final String number = c.getString(contactNumberColumnIndex);
+                final int type = c.getInt(contactTypeColumnIndex);
+                contact.setPhoneNumber(number);
+
+                String pType = "";
+                switch (type) {
+                    case Phone.TYPE_HOME:
+                        pType = "Home";
+                        break;
+                    case Phone.TYPE_MOBILE:
+                        pType = "Mobile";
+                        break;
+                    case Phone.TYPE_WORK:
+                        pType = "Work";
+                        break;
+                    case Phone.TYPE_FAX_HOME:
+                        pType = "Home Fax";
+                        break;
+                    case Phone.TYPE_FAX_WORK:
+                        pType = "Work Fax";
+                        break;
+                    case Phone.TYPE_MAIN:
+                        pType = "Main";
+                        break;
+                    case Phone.TYPE_OTHER:
+                        pType = "Other";
+                        break;
                 }
-                final int type = phone.getInt(contactTypeColumnIndex);
-                String customLabel = "Custom";
-                CharSequence phoneType = Phone.getTypeLabel(mContext.getResources(), type, customLabel);
-                //contact.addNumber(number, phoneType.toString());
-                phone.moveToNext();
+                contact.setPhoneType(pType);
+                c.moveToNext();
             }
+        } else {
+            contact.setPhoneNumber("");
+            contact.setPhoneType("");
         }
+        c.close();
+    }
 
-        phone.close();
+    public void appendEmail(long contactId) {
+        final String[] emailProjection = new String[]{
+                Email.ADDRESS,
+                Email.TYPE,
+                Email.CONTACT_ID,
+        };
+
+        String selection = Email.CONTACT_ID + " = ?";
+
+        String[] selectionArgs = { Long.toString(contactId) };
+
+        Cursor c = new CursorLoader(mContext,
+                Email.CONTENT_URI,
+                emailProjection,
+                selection,
+                selectionArgs,
+                null).loadInBackground();
+
+        if (c.getCount()>0 && c.moveToFirst()) {
+            int emailAddressColumnIndex = c.getColumnIndex(Email.ADDRESS);
+            int emailTypeColumnIndex = c.getColumnIndex(Email.TYPE);
+
+            while (!c.isAfterLast()) {
+                String address = c.getString(emailAddressColumnIndex);
+                int type = c.getInt(emailTypeColumnIndex);
+                contact.setEmailAddress(address);
+
+                String eType = "";
+                switch (type) {
+                    case Email.TYPE_CUSTOM:
+                        eType = "Custom";
+                        break;
+                    case Email.TYPE_HOME:
+                        eType = "Home";
+                        break;
+                    case Email.TYPE_WORK:
+                        eType = "Work";
+                        break;
+                    case Email.TYPE_OTHER:
+                        eType = "Other";
+                        break;
+                    case Email.TYPE_MOBILE:
+                        eType = "Mobile";
+                        break;
+                }
+                contact.setEmailType(eType);
+                c.moveToNext();
+            }
+        } else {
+            contact.setEmailAddress("");
+            contact.setEmailType("");
+        }
+        c.close();
     }
 
 }

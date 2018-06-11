@@ -1,7 +1,5 @@
 package com.hellogroup.connectapp.di;
 
-import com.hellogroup.connectapp.data.Device;
-import com.hellogroup.connectapp.data.source.ContactFetcher;
 import com.hellogroup.connectapp.data.source.ContactsDataSource;
 import com.hellogroup.connectapp.data.source.ContactsLocalDataSource;
 import com.hellogroup.connectapp.util.AppExecutors;

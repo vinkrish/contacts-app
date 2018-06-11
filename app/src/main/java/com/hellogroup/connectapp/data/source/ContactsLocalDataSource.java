@@ -47,4 +47,11 @@ public class ContactsLocalDataSource implements ContactsDataSource {
             callback.onContactsLoaded(contacts);
         }
     }
+
+    @Override
+    public void getContactDetails(long contactId, LoadContactDetailsCallback callback) {
+        final Contact contact = mContactFetcher.getContactDetails(contactId);
+        callback.onContactDetailsLoaded(contact);
+    }
+
 }
