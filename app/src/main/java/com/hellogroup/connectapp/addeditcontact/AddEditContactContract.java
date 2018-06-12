@@ -10,7 +10,7 @@ public interface AddEditContactContract {
 
         void setLoadingIndicator(boolean active);
 
-        void setName(String name);
+        void setName(String name, String rawPhoneNumber);
 
         void setPhone(String phone);
 

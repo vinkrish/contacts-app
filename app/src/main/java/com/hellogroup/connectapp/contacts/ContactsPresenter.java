@@ -1,6 +1,7 @@
 package com.hellogroup.connectapp.contacts;
 
 import android.app.Activity;
+import android.util.Log;
 
 import com.hellogroup.connectapp.addeditcontact.AddEditContactActivity;
 import com.hellogroup.connectapp.data.Contact;

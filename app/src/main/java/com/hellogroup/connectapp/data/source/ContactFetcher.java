@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.support.v4.content.CursorLoader;
+import android.util.Log;
 
 import com.hellogroup.connectapp.data.Contact;
 
@@ -135,6 +136,7 @@ public class ContactFetcher{
                 final String number = c.getString(contactNumberColumnIndex);
                 final int type = c.getInt(contactTypeColumnIndex);
                 contact.setPhoneNumber(number);
+                contact.setRawPhoneNumber(number);
 
                 String pType = "";
                 switch (type) {
@@ -244,7 +246,7 @@ public class ContactFetcher{
         ContentValues contentValues = new ContentValues();
         contentValues.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
         contentValues.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, displayName);
+        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName);
 
         mContext.getContentResolver().insert(addContactsUri, contentValues);
     }
@@ -315,15 +317,39 @@ public class ContactFetcher{
 
     public void updateContactDetails(Contact contact) {
         ContentResolver contentResolver = mContext.getContentResolver();
-        updateDisplayName(contentResolver, contact.getContactId(), contact.displayName);
-        updatePhoneNumber(contentResolver, contact.getContactId(), getPhoneType(contact.getPhoneType()), contact.getPhoneNumber());
-        updateEmailAddress(contentResolver, contact.getContactId(), getEmailType(contact.getEmailType()), contact.getEmailAddress());
+        long rawContactId = getRawContactIdPhoneNumber(contact.getRawPhoneNumber());
+        Log.d("rawContactId", rawContactId + "");
+        updateDisplayName(contentResolver, rawContactId, contact.displayName);
+        updatePhoneNumber(contentResolver, rawContactId, getPhoneType(contact.getPhoneType()), contact.getPhoneNumber());
+        updateEmailAddress(contentResolver, rawContactId, getEmailType(contact.getEmailType()), contact.getEmailAddress());
+    }
+
+    private long getRawContactIdPhoneNumber(String phoneNumber) {
+        ContentResolver contentResolver = mContext.getContentResolver();
+
+        String queryColumnArr[] = {ContactsContract.Data.RAW_CONTACT_ID};
+        String whereClause = Phone.NUMBER + " = '" + phoneNumber + "'";
+
+        Uri rawContactUri = ContactsContract.Data.CONTENT_URI;
+        Cursor cursor = contentResolver.query(rawContactUri, queryColumnArr, whereClause, null, null);
+
+        long rawContactId = -1;
+
+        if(cursor!=null) {
+            int queryResultCount = cursor.getCount();
+            // This check is used to avoid cursor index out of bounds exception. android.database.CursorIndexOutOfBoundsException
+            if(queryResultCount > 0) {
+                cursor.moveToFirst();
+                rawContactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.Data.RAW_CONTACT_ID));
+            }
+        }
+        return rawContactId;
     }
 
     /* Update phone number with raw contact id and phone type.*/
     private int updateDisplayName(ContentResolver contentResolver, long rawContactId, String displayName) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, displayName);
+        contentValues.put(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, displayName);
 
         StringBuffer whereClauseBuf = new StringBuffer();
 

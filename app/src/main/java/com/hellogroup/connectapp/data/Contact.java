@@ -4,6 +4,7 @@ import android.net.Uri;
 
 public class Contact {
     public long contactId;
+    private String rawPhoneNumber;
     public Uri contactUri;
     public String displayName;
     public String phoneNumber;
@@ -24,6 +25,14 @@ public class Contact {
 
     public void setContactId(long contactId) {
         this.contactId = contactId;
+    }
+
+    public String getRawPhoneNumber() {
+        return rawPhoneNumber;
+    }
+
+    public void setRawPhoneNumber(String rawPhoneNumber) {
+        this.rawPhoneNumber = rawPhoneNumber;
     }
 
     public String getDisplayName() {

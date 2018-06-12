@@ -61,7 +61,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Override
     public void onContactDetailsLoaded(Contact contact) {
         if(mAddEditContactView != null) {
-            mAddEditContactView.setName(contact.getDisplayName());
+            mAddEditContactView.setName(contact.getDisplayName(), contact.getPhoneNumber());
             mAddEditContactView.setPhone(contact.getPhoneNumber());
             mAddEditContactView.setEmail(contact.getEmailAddress());
         }
@@ -93,6 +93,7 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
 
     private void checkAndCreateContact(Contact contact) {
          if(checkContactDetails(contact)) {
+             //contact.setContactId(mContactId);
              mContactsRepository.saveContact(contact);
              if(mAddEditContactView != null) {
                  mAddEditContactView.showContactList();

@@ -31,6 +31,7 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements
 
     public static final int REQUEST_ADD_CONTACT = 2;
     public static final String ARGUMENT_EDIT_CONTACT_ID = "EDIT_CONTACT_ID";
+    private String mRawPhoneNumber;
 
     @Inject
     AddEditContactContract.Presenter mPresenter;
@@ -59,6 +60,7 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements
         switch (item.getItemId()) {
             case R.id.action_add_contact:
                 Contact contact = new Contact();
+                contact.setRawPhoneNumber(mRawPhoneNumber);
                 contact.setDisplayName(mName.getText().toString());
                 contact.setPhoneNumber(mPhone.getText().toString());
                 contact.setPhoneType("Work");
@@ -77,8 +79,9 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements
     }
 
     @Override
-    public void setName(String name) {
+    public void setName(String name, String rawPhoneNumber) {
         mName.setText(name);
+        mRawPhoneNumber = rawPhoneNumber;
     }
 
     @Override

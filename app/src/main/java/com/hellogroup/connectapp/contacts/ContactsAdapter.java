@@ -23,10 +23,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Contact> {
-    private ArrayList<Contact> mContacts;
+    private ArrayList<Contact> mContacts = new ArrayList<>();
     private LayoutInflater mInflater;
     private ContactsActivity.ContactItemListener mItemListener;
-    private final AsyncTaskThreadPool mAsyncTaskThreadPool = new AsyncTaskThreadPool(1, 2, 10);
 
     ColorGenerator generator = ColorGenerator.MATERIAL;
     TextDrawable.IBuilder builder = TextDrawable.builder()
@@ -40,22 +39,22 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
         return ((StringArrayAlphabetIndexer.AlphaBetSection) getSections()[sectionIndex]).getName();
     }
 
-    public ContactsAdapter(Context context, final ArrayList<Contact> contacts, ContactsActivity.ContactItemListener itemListener) {
+    ContactsAdapter(Context context, final ArrayList<Contact> contacts, ContactsActivity.ContactItemListener itemListener) {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         setData(contacts);
         mItemListener = itemListener;
     }
 
     public void setData(ArrayList<Contact> contacts) {
-        this.mContacts = contacts;
-        notifyDataSetChanged();
+        mContacts = contacts;
         final String[] generatedContactNames = generateContactNames(contacts);
         setSectionIndexer(new StringArrayAlphabetIndexer(generatedContactNames, true));
     }
 
     public void replaceData(ArrayList<Contact> contacts) {
-        setData(contacts);
-        notifyDataSetChanged();
+        this.mContacts.clear();
+        this.mContacts.addAll(contacts);
+        //notifyDataSetChanged();
     }
 
     private String[] generateContactNames(final List<Contact> contacts) {
@@ -68,8 +67,8 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        final View rootView;
+        ViewHolder holder;
+        View rootView = convertView;
         if (convertView == null) {
             holder = new ViewHolder();
             rootView = mInflater.inflate(R.layout.listview_item, parent, false);
@@ -78,7 +77,7 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
             holder.headerView = rootView.findViewById(R.id.header_text);
             rootView.setTag(holder);
         } else {
-            rootView = convertView;
+            //rootView = convertView;
             holder = (ViewHolder) rootView.getTag();
         }
         final Contact contact = getItem(position);
@@ -87,9 +86,6 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
         TextDrawable drawable = builder.build(displayName.substring(0,1), color);
         holder.contactImage.setImageDrawable(drawable);
         holder.contactName.setText(displayName);
-
-        if (holder.updateTask != null && !holder.updateTask.isCancelled())
-            holder.updateTask.cancel(true);
 
         bindSectionHeader(holder.headerView, null, position);
 
@@ -121,6 +117,5 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
         //public CircularContactView friendProfileCircularContactView;
         TextView contactName, headerView;
         public ImageView contactImage;
-        public AsyncTaskEx<Void, Void, Bitmap> updateTask;
     }
 }

@@ -54,7 +54,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
 
         setSupportActionBar(toolbar);
 
-        setupListView();
+        setupListView(new ArrayList<Contact>(0));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,10 +77,10 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
         }
     }
 
-    private void setupListView() {
+    private void setupListView(ArrayList<Contact> contacts) {
         //mInflater = LayoutInflater.from(ContactsActivity.this);
         mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        mAdapter = new ContactsAdapter(this, new ArrayList<Contact>(0), mItemListener);
+        mAdapter = new ContactsAdapter(this, contacts, mItemListener);
 
         int pinnedHeaderBackgroundColor = getResources().getColor(getResIdFromAttribute(this, android.R.attr.colorBackground));
         mAdapter.setPinnedHeaderBackgroundColor(pinnedHeaderBackgroundColor);
@@ -107,7 +107,9 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void showContacts(ArrayList<Contact> contactList) {
-        mAdapter.setData(contactList);
+        setupListView(contactList);
+        //mAdapter.setData(contactList);
+        //mAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -126,6 +128,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
     @Override
     public void showSuccessfullySavedMessage() {
         showMessage("New Contact Saved");
+        //setupListView();
         mPresenter.loadContacts();
     }
 
