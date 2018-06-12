@@ -14,13 +14,25 @@ public interface ContactsDataSource {
     }
 
     interface LoadContactDetailsCallback {
+
         void onContactDetailsLoaded(Contact contact);
 
         void onContactDetailsNotAvailable();
     }
 
+    interface SaveContactCallback {
+
+        void onContactSaved();
+
+        void onFailedToSaveContact();
+    }
+
     void getContacts(LoadContactsCallback callback);
 
     void getContactDetails(long contactId, LoadContactDetailsCallback callback);
+
+    void saveContact(Contact contact);
+
+    void updateContact(Contact contact);
 
 }

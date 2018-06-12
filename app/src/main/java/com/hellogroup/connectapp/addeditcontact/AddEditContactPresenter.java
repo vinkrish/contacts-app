@@ -1,5 +1,6 @@
 package com.hellogroup.connectapp.addeditcontact;
 
+import com.google.common.base.Strings;
 import com.hellogroup.connectapp.data.Contact;
 import com.hellogroup.connectapp.data.source.ContactsDataSource;
 import com.hellogroup.connectapp.data.source.ContactsRepository;
@@ -32,6 +33,15 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     }
 
     @Override
+    public void saveContact(Contact contact) {
+        if(isNewContact()) {
+            checkAndCreateContact(contact);
+        } else {
+            checkAndUpdateContact(contact);
+        }
+    }
+
+    @Override
     public void populateContact() {
         if(isNewContact()) {
             throw new RuntimeException("New Contact but populateContact is called!");
@@ -60,5 +70,33 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     @Override
     public void onContactDetailsNotAvailable() {
 
+    }
+
+    private boolean checkContactDetails(Contact contact) {
+        if(Strings.isNullOrEmpty(contact.getDisplayName())) {
+            if(mAddEditContactView != null) mAddEditContactView.showEmptyNameError();
+            return false;
+        } else if(Strings.isNullOrEmpty(contact.getPhoneNumber())) {
+            if(mAddEditContactView != null) mAddEditContactView.showPhoneError("Phone number cannot be empty!");
+            return false;
+        } else if(Strings.isNullOrEmpty(contact.getEmailAddress())) {
+            if(mAddEditContactView != null) mAddEditContactView.showEmailError("Email address cannot be empty!");
+            return false;
+        } else if(contact.getPhoneNumber().length() != 10) {
+            if(mAddEditContactView != null) mAddEditContactView.showPhoneError("Phone number must be of 10 digits!");
+            return false;
+        } else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(contact.getEmailAddress()).matches()) {
+            if(mAddEditContactView != null) mAddEditContactView.showEmailError("Email should be of valid format!");
+            return false;
+        } else return true;
+    }
+
+    private void checkAndCreateContact(Contact contact) {
+         if(checkContactDetails(contact)) mContactsRepository.saveContact(contact);
+    }
+
+    private void checkAndUpdateContact(Contact contact) {
+        contact.setContactId(mContactId);
+        if(checkContactDetails(contact)) mContactsRepository.updateContact(contact);
     }
 }

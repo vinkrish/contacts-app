@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.hellogroup.connectapp.R;
+import com.hellogroup.connectapp.data.Contact;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 
-public class AddEditContactActivity extends DaggerAppCompatActivity implements AddEditContactContract.View{
+public class AddEditContactActivity extends DaggerAppCompatActivity implements
+        AddEditContactContract.View{
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.coordinatorLayout) CoordinatorLayout coordinatorLayout;
     @BindView(R.id.name) TextInputLayout nameInputLayout;
@@ -55,7 +57,13 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_add_contact:
-                //save contact
+                Contact contact = new Contact();
+                contact.setDisplayName(mName.getText().toString());
+                contact.setPhoneNumber(mPhone.getText().toString());
+                contact.setPhoneType("Work");
+                contact.setEmailAddress(mEmail.getText().toString());
+                contact.setEmailType("Work");
+                mPresenter.saveContact(contact);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -83,10 +91,24 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements A
     }
 
     @Override
+    public void showEmptyNameError() {
+        mName.setError("Name can't be empty!");
+    }
+
+    @Override
+    public void showPhoneError(String error) {
+        mPhone.setError(error);
+    }
+
+    @Override
+    public void showEmailError(String error) {
+        mEmail.setError(error);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mPresenter.takeView(this);
-
     }
 
     @Override

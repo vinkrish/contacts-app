@@ -47,4 +47,14 @@ public class ContactsRepository implements ContactsDataSource{
             }
         });
     }
+
+    @Override
+    public void saveContact(Contact contact) {
+        mContactLocalDataSource.saveContact(contact);
+    }
+
+    @Override
+    public void updateContact(Contact contact) {
+        mContactLocalDataSource.updateContact(contact);
+    }
 }

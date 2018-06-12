@@ -54,4 +54,14 @@ public class ContactsLocalDataSource implements ContactsDataSource {
         callback.onContactDetailsLoaded(contact);
     }
 
+    @Override
+    public void saveContact(Contact contact) {
+        mContactFetcher.insertNewContact(contact);
+    }
+
+    @Override
+    public void updateContact(Contact contact) {
+        mContactFetcher.updateContactDetails(contact);
+    }
+
 }
