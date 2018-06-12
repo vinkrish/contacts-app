@@ -18,10 +18,14 @@ public interface ContactsContract {
 
         void showContactDetailsUi(long contactId);
 
+        void showSuccessfullySavedMessage();
+
         void showAddContact();
     }
 
     interface Presenter extends BasePresenter<View>{
+
+        void result(int requestCode, int resultCode);
 
         void takeView(ContactsContract.View view);
 

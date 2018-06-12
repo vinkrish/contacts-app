@@ -1,5 +1,8 @@
 package com.hellogroup.connectapp.contacts;
 
+import android.app.Activity;
+
+import com.hellogroup.connectapp.addeditcontact.AddEditContactActivity;
 import com.hellogroup.connectapp.data.Contact;
 import com.hellogroup.connectapp.data.source.ContactsDataSource;
 import com.hellogroup.connectapp.data.source.ContactsRepository;
@@ -19,6 +22,16 @@ public class ContactsPresenter implements ContactsContract.Presenter {
     @Inject
     ContactsPresenter(ContactsRepository contactsRepository){
         mContactsRepository = contactsRepository;
+    }
+
+    @Override
+    public void result(int requestCode, int resultCode) {
+        if (AddEditContactActivity.REQUEST_ADD_CONTACT == requestCode
+                && Activity.RESULT_OK == resultCode) {
+            if (mContactsView != null) {
+                mContactsView.showSuccessfullySavedMessage();
+            }
+        }
     }
 
     @Override

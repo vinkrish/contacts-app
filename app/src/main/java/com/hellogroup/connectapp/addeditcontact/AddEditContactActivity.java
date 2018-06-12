@@ -1,5 +1,6 @@
 package com.hellogroup.connectapp.addeditcontact;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.TextInputLayout;
@@ -28,7 +29,7 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements
     @BindView(R.id.phone_et) EditText mPhone;
     @BindView(R.id.email_et) EditText mEmail;
 
-    public static final int REQUEST_ADD_CONTACT = 1;
+    public static final int REQUEST_ADD_CONTACT = 2;
     public static final String ARGUMENT_EDIT_CONTACT_ID = "EDIT_CONTACT_ID";
 
     @Inject
@@ -103,6 +104,12 @@ public class AddEditContactActivity extends DaggerAppCompatActivity implements
     @Override
     public void showEmailError(String error) {
         mEmail.setError(error);
+    }
+
+    @Override
+    public void showContactList() {
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 
     @Override

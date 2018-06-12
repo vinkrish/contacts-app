@@ -21,6 +21,8 @@ public interface AddEditContactContract {
         void showPhoneError(String error);
 
         void showEmailError(String error);
+
+        void showContactList();
     }
 
     interface Presenter extends BasePresenter<View> {

@@ -107,7 +107,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void showContacts(ArrayList<Contact> contactList) {
-        mAdapter.replaceData(contactList);
+        mAdapter.setData(contactList);
     }
 
     @Override
@@ -121,6 +121,16 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
         Intent intent = new Intent(getApplicationContext(), ContactDetailActivity.class);
         intent.putExtra(ContactDetailActivity.EXTRA_CONTACT_ID, contactId);
         startActivity(intent);
+    }
+
+    @Override
+    public void showSuccessfullySavedMessage() {
+        showMessage("New Contact Saved");
+        mPresenter.loadContacts();
+    }
+
+    private void showMessage(String message) {
+        Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
     @Override
@@ -141,9 +151,14 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
     };
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        mPresenter.result(requestCode, resultCode);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        if(mAdapter.getCount() == 0 && PermissionUtil.getContactsReadingPermissionStatus(this)) {
+        if(mAdapter.getCount()==0 && PermissionUtil.getContactsReadingPermissionStatus(this)) {
             mPresenter.takeView(this);
         }
     }

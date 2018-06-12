@@ -92,11 +92,21 @@ public class AddEditContactPresenter implements AddEditContactContract.Presenter
     }
 
     private void checkAndCreateContact(Contact contact) {
-         if(checkContactDetails(contact)) mContactsRepository.saveContact(contact);
+         if(checkContactDetails(contact)) {
+             mContactsRepository.saveContact(contact);
+             if(mAddEditContactView != null) {
+                 mAddEditContactView.showContactList();
+             }
+         }
     }
 
     private void checkAndUpdateContact(Contact contact) {
         contact.setContactId(mContactId);
-        if(checkContactDetails(contact)) mContactsRepository.updateContact(contact);
+        if(checkContactDetails(contact)) {
+            mContactsRepository.updateContact(contact);
+            if(mAddEditContactView != null) {
+                mAddEditContactView.showContactList();
+            }
+        }
     }
 }
