@@ -54,7 +54,7 @@ public class ContactsAdapter extends SearchablePinnedHeaderListViewAdapter<Conta
     public void replaceData(ArrayList<Contact> contacts) {
         this.mContacts.clear();
         this.mContacts.addAll(contacts);
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     private String[] generateContactNames(final List<Contact> contacts) {

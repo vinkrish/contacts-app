@@ -28,11 +28,11 @@ public class ContactFetcher{
         mContext = context;
     }
 
-    private ArrayList<Contact> listContacts = new ArrayList<>();
-
     private Contact contact = new Contact();
 
     public ArrayList<Contact> getContacts() {
+
+        ArrayList<Contact> listContacts = new ArrayList<>();
 
         String[] projectionFields = new String[]{
                 ContactsContract.Contacts._ID,

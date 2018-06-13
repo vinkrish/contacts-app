@@ -9,6 +9,9 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -37,8 +40,10 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(android.R.id.list) PinnedHeaderListView mListView;
+    //@BindView(R.id.recycler_view) RecyclerView recyclerView;
 
     private ContactsAdapter mAdapter;
+    private ContactsRecyclerAdapter recyclerAdapter;
     private LayoutInflater mInflater;
 
     private static final int READ_CONTACTS_PERMISSION = 999;
@@ -55,6 +60,7 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
         setSupportActionBar(toolbar);
 
         setupListView(new ArrayList<Contact>(0));
+        //setupRecyclerView();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +97,15 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
         mListView.setEnableHeaderTransparencyChanges(false);
     }
 
+    /*private void setupRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        recyclerAdapter = new ContactsRecyclerAdapter(new ArrayList<Contact>(0), mItemListener);
+        recyclerView.setAdapter(recyclerAdapter);
+    }*/
+
     public static int getResIdFromAttribute(final Activity activity, final int attr) {
         if (attr == 0)
             return 0;
@@ -107,9 +122,8 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
 
     @Override
     public void showContacts(ArrayList<Contact> contactList) {
-        setupListView(contactList);
-        //mAdapter.setData(contactList);
-        //mAdapter.notifyDataSetChanged();
+        mAdapter.setData(contactList);
+        //recyclerAdapter.setDataSet(contactList);
     }
 
     @Override
@@ -128,7 +142,6 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
     @Override
     public void showSuccessfullySavedMessage() {
         showMessage("New Contact Saved");
-        //setupListView();
         mPresenter.loadContacts();
     }
 
@@ -161,9 +174,12 @@ public class ContactsActivity extends DaggerAppCompatActivity implements
     @Override
     public void onResume() {
         super.onResume();
-        if(mAdapter.getCount()==0 && PermissionUtil.getContactsReadingPermissionStatus(this)) {
+        if(PermissionUtil.getContactsReadingPermissionStatus(this)) {
             mPresenter.takeView(this);
         }
+        /*if(recyclerAdapter.getItemCount()==0 && PermissionUtil.getContactsReadingPermissionStatus(this)) {
+            mPresenter.takeView(this);
+        }*/
     }
 
     @Override
